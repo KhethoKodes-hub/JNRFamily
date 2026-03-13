@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JNR Trading · Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --blue-deep:   #01204e;
+      --blue-mid:    #0369a1;
+      --blue-bright: #0ea5e9;
+      --blue-light:  #bae6fd;
+    }
+
+    * { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #fff; color: var(--blue-deep); overflow-x: hidden; }
+
+    /* ── NAVBAR ── */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; align-items: center; justify-content: space-between; background: rgba(1,32,78,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.12); transition: background 0.4s; }
+    .navbar.scrolled { background: rgba(1,32,78,0.94); }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 900; color: #fff; letter-spacing: 2px; text-decoration: none; }
+    .nav-logo span { color: var(--blue-bright); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; margin: 0; padding: 0; }
+    .nav-links a { color: rgba(255,255,255,0.82); text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--blue-bright); transition: width 0.3s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue-bright); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { background: linear-gradient(135deg, var(--blue-bright), #2563eb); color: #fff; padding: 0.6rem 1.6rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; text-decoration: none; box-shadow: 0 4px 20px rgba(14,165,233,0.4); transition: transform 0.2s, box-shadow 0.2s; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(14,165,233,0.55); }
+
+    /* ── HERO ── */
+    .hero-services {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(1,32,78,0.92) 0%, rgba(3,105,161,0.72) 45%, rgba(14,165,233,0.28) 100%),
+        url('https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=2400&auto=format&fit=crop') center/cover no-repeat;
+    }
+    .hero-services::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.3; pointer-events: none; }
+
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); animation: orb-drift 10s ease-in-out infinite alternate; pointer-events: none; }
+    .orb-a { width: 520px; height: 520px; background: rgba(14,165,233,0.22); top: -100px; right: -60px; }
+    .orb-b { width: 300px; height: 300px; background: rgba(37,99,235,0.18); bottom: 80px; right: 28%; animation-delay: 4s; }
+    .orb-c { width: 200px; height: 200px; background: rgba(14,165,233,0.14); top: 40%; left: 62%; animation-delay: 7s; }
+    @keyframes orb-drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px,50px) scale(1.1); } }
+
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(255,255,255,0.10); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1.4rem; border-radius: 50px; color: var(--blue-light); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; }
+    .hero-eyebrow-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 0 3px rgba(74,222,128,0.25); animation: pulse-g 2s infinite; }
+    @keyframes pulse-g { 0%,100% { box-shadow: 0 0 0 3px rgba(74,222,128,0.25); } 50% { box-shadow: 0 0 0 7px rgba(74,222,128,0.10); } }
+
+    .hero-h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 9vw, 7.5rem); font-weight: 900; line-height: 1.0; color: #fff; letter-spacing: -0.02em; }
+    .hero-h1 .accent { background: linear-gradient(90deg, var(--blue-bright), #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.72); max-width: 520px; line-height: 1.75; margin-top: 1.5rem; }
+
+    .scroll-ind { position: absolute; bottom: 2.5rem; right: 3rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.4); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.5)); animation: scroll-fall 1.8s ease-in-out infinite; }
+    @keyframes scroll-fall { 0%,100% { opacity:0; transform:scaleY(0.3); } 50% { opacity:1; transform:scaleY(1); } }
+
+    @keyframes fade-up { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    .fu-1 { animation: fade-up 0.85s 0.0s ease both; }
+    .fu-2 { animation: fade-up 0.85s 0.12s ease both; }
+    .fu-3 { animation: fade-up 0.85s 0.22s ease both; }
+    .fu-4 { animation: fade-up 0.85s 0.34s ease both; }
+
+    /* ── TICKER ── */
+    .ticker-wrap { background: linear-gradient(90deg, var(--blue-deep), #0b4185, var(--blue-deep)); padding: 1rem 0; overflow: hidden; border-top: 1px solid rgba(14,165,233,0.3); border-bottom: 1px solid rgba(14,165,233,0.3); }
+    .ticker-inner { display: flex; width: max-content; animation: ticker 30s linear infinite; }
+    .ticker-inner span { color: rgba(255,255,255,0.72); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 0 3rem; display: flex; align-items: center; gap: 0.8rem; }
+    .ticker-inner span i { color: var(--blue-bright); font-size: 0.72rem; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── UTILITIES ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .section-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue-bright); display: flex; align-items: center; gap: 0.8rem; }
+    .section-eyebrow::before { content: ''; display: block; width: 30px; height: 2px; background: var(--blue-bright); }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: var(--blue-deep); }
+    .gradient-text { background: linear-gradient(135deg, var(--blue-bright), #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .grad-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(14,165,233,0.4), transparent); margin: 0 2rem; }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* glass */
+    .glass { background: rgba(255,255,255,0.68); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.88); border-radius: 28px; box-shadow: 0 8px 32px rgba(1,32,78,0.09), inset 0 1px 0 rgba(255,255,255,0.9); }
+
+    /* btns */
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, var(--blue-bright), #2563eb); color: #fff; padding: 1rem 2.4rem; border-radius: 60px; font-size: 1rem; font-weight: 600; text-decoration: none; box-shadow: 0 6px 32px rgba(14,165,233,0.45), inset 0 1px 0 rgba(255,255,255,0.2); transition: transform 0.25s, box-shadow 0.25s; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 45px rgba(14,165,233,0.55); }
+    .btn-ghost-dark { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); color: #fff; padding: 1rem 2.4rem; border-radius: 60px; font-size: 1rem; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.28); transition: background 0.3s, transform 0.25s; }
+    .btn-ghost-dark:hover { background: rgba(255,255,255,0.16); transform: translateY(-3px); }
+
+    /* ── HERO SERVICE CARDS (nav shortcuts) ── */
+    .service-nav-card {
+      padding: 1.6rem 1.8rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      transition: all 0.3s;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .service-nav-card:hover { background: rgba(255,255,255,0.16); border-color: rgba(14,165,233,0.5); transform: translateY(-4px); color: #fff; }
+    .service-nav-card i { color: var(--blue-bright); font-size: 1.4rem; flex-shrink: 0; }
+    .service-nav-card .label { font-weight: 600; font-size: 0.95rem; display: block; }
+    .service-nav-card .sub { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 0.15rem; }
+
+    /* ── SECTION 2 – WHOLESALE ── */
+    .wholesale-section {
+      padding: 9rem 0;
+      background: linear-gradient(160deg, #f0f8ff 0%, #ffffff 55%, #e0f2fe 100%);
+      position: relative; overflow: hidden;
+    }
+
+    .feature-row { display: flex; gap: 1rem; align-items: flex-start; padding: 1.1rem 1.4rem; border-radius: 16px; border: 1px solid rgba(186,230,253,0.8); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); transition: all 0.3s; }
+    .feature-row:hover { border-color: var(--blue-bright); background: rgba(255,255,255,0.95); transform: translateX(6px); }
+    .feature-row-icon { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(135deg, var(--blue-bright), #2563eb); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(14,165,233,0.35); }
+
+    .product-tag-chip { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; border-radius: 50px; background: rgba(255,255,255,0.8); border: 1px solid rgba(186,230,253,0.9); font-size: 0.85rem; font-weight: 500; color: var(--blue-deep); transition: all 0.25s; cursor: default; }
+    .product-tag-chip:hover { background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(37,99,235,0.06)); border-color: var(--blue-bright); }
+    .product-tag-chip i { color: var(--blue-bright); font-size: 0.8rem; }
+
+    .stat-box { padding: 2rem 1.5rem; text-align: center; background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); border: 1px solid rgba(186,230,253,0.85); border-radius: 22px; box-shadow: 0 6px 24px rgba(1,32,78,0.07); transition: all 0.3s; }
+    .stat-box:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(3,105,161,0.16); border-color: var(--blue-bright); }
+    .stat-box .num { font-family: 'Space Mono', monospace; font-size: 2.4rem; font-weight: 700; color: var(--blue-deep); line-height: 1; }
+    .stat-box .num span { color: var(--blue-bright); font-size: 1.1rem; }
+    .stat-box .lbl { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #4a6080; margin-top: 0.4rem; }
+
+    /* ── SECTION 3 – LOGISTICS ── */
+    .logistics-section {
+      padding: 9rem 0;
+      background:
+        linear-gradient(180deg, rgba(1,32,78,0.97) 0%, rgba(3,56,120,0.98) 100%),
+        url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2400&auto=format&fit=crop') center/cover no-repeat;
+      position: relative; overflow: hidden;
+    }
+    .logistics-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(14,165,233,0.18), transparent); pointer-events: none; }
+    .logistics-section::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(14,165,233,0.05) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+
+    .logistics-card {
+      padding: 2.5rem;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all 0.4s;
+      position: relative; overflow: hidden;
+    }
+    .logistics-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue-bright), #2563eb); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+    .logistics-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.10); border-color: rgba(14,165,233,0.35); }
+    .logistics-card:hover::before { transform: scaleX(1); }
+    .logistics-card .l-icon { width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.12)); border: 1px solid rgba(14,165,233,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--blue-bright); margin-bottom: 1.5rem; transition: all 0.4s; }
+    .logistics-card:hover .l-icon { background: linear-gradient(135deg, var(--blue-bright), #2563eb); color: #fff; border-color: transparent; box-shadow: 0 8px 25px rgba(14,165,233,0.5); }
+    .logistics-card h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 0.7rem; }
+    .logistics-card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+    /* big metric */
+    .big-metric { background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(37,99,235,0.1)); backdrop-filter: blur(14px); border: 1px solid rgba(14,165,233,0.3); border-radius: 28px; padding: 2.5rem; text-align: center; }
+    .big-metric .metric-num { font-family: 'Space Mono', monospace; font-size: 4rem; font-weight: 700; color: var(--blue-bright); line-height: 1; }
+    .big-metric .metric-lbl { color: rgba(255,255,255,0.65); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem; }
+
+    /* temp badges */
+    .temp-badge { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.7rem 1.3rem; border-radius: 50px; font-family: 'Space Mono', monospace; font-size: 0.82rem; font-weight: 700; }
+    .temp-cold { background: rgba(14,165,233,0.18); border: 1px solid rgba(14,165,233,0.4); color: var(--blue-light); }
+    .temp-freeze { background: rgba(37,99,235,0.18); border: 1px solid rgba(37,99,235,0.4); color: #93c5fd; }
+    .temp-ambient { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
+
+    /* ── SECTION 4 – SOURCING ── */
+    .sourcing-section {
+      padding: 9rem 0;
+      background: linear-gradient(135deg, #f0f8ff 0%, #fff 50%, #e0f2fe 100%);
+      position: relative; overflow: hidden;
+    }
+
+    .sourcing-image-wrap { position: relative; height: 560px; }
+    .sourcing-img-main { position: absolute; top: 0; right: 0; width: 80%; height: 450px; border-radius: 32px; object-fit: cover; box-shadow: 0 40px 80px rgba(1,32,78,0.22); }
+    .sourcing-img-accent { position: absolute; bottom: 0; left: 0; width: 50%; height: 270px; border-radius: 24px; object-fit: cover; border: 6px solid #fff; box-shadow: 0 20px 60px rgba(1,32,78,0.18); }
+    .sourcing-badge { position: absolute; top: 50px; left: 18px; background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid)); color: #fff; padding: 1.3rem 1.6rem; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(1,32,78,0.35); z-index: 5; }
+    .sourcing-badge .big { font-family: 'Space Mono', monospace; font-size: 1.9rem; font-weight: 700; color: var(--blue-bright); }
+    .sourcing-badge .lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.72; margin-top: 0.3rem; }
+
+    .country-pill { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 50px; background: rgba(255,255,255,0.8); border: 1px solid rgba(186,230,253,0.9); font-size: 0.85rem; font-weight: 500; color: var(--blue-deep); transition: all 0.25s; }
+    .country-pill:hover { background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(37,99,235,0.06)); border-color: var(--blue-bright); transform: translateY(-2px); }
+
+    /* private label card */
+    .private-label-card {
+      background: linear-gradient(135deg, rgba(1,32,78,0.04), rgba(14,165,233,0.06));
+      border: 1.5px solid rgba(14,165,233,0.25);
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      transition: all 0.3s;
+    }
+    .private-label-card:hover { border-color: var(--blue-bright); background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(37,99,235,0.04)); transform: translateY(-4px); }
+
+    /* ── SECTION 5 – VALUE-ADDED ── */
+    .value-section {
+      padding: 9rem 0;
+      background: linear-gradient(160deg, rgba(1,32,78,0.96), rgba(3,56,120,0.97));
+      position: relative; overflow: hidden;
+    }
+    .value-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(14,165,233,0.15), transparent); pointer-events: none; }
+
+    .val-card {
+      border-radius: 28px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.11);
+      padding: 2.8rem 2.4rem;
+      transition: all 0.4s;
+      position: relative; overflow: hidden;
+    }
+    .val-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue-bright), #2563eb); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+    .val-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.10); border-color: rgba(14,165,233,0.35); box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+    .val-card:hover::after { transform: scaleX(1); }
+    .val-icon { width: 66px; height: 66px; border-radius: 20px; background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.12)); border: 1px solid rgba(14,165,233,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--blue-bright); margin-bottom: 1.8rem; transition: all 0.4s; }
+    .val-card:hover .val-icon { background: linear-gradient(135deg, var(--blue-bright), #2563eb); color: #fff; border-color: transparent; box-shadow: 0 8px 25px rgba(14,165,233,0.5); }
+    .val-card h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem; }
+    .val-card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+    /* ── FINAL CTA ── */
+    .cta-section {
+      padding: 9rem 0;
+      position: relative; overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(1,32,78,0.92) 0%, rgba(3,80,150,0.85) 55%, rgba(14,165,233,0.4) 100%),
+        url('https://images.unsplash.com/photo-1593627010886-d34828365da7?q=80&w=2400&auto=format&fit=crop') center/cover no-repeat;
+    }
+    .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 70% 50%, rgba(14,165,233,0.2), transparent); }
+
+    .cta-glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.18); border-radius: 36px; padding: 4rem; box-shadow: 0 30px 80px rgba(1,32,78,0.35), inset 0 1px 0 rgba(255,255,255,0.15); position: relative; overflow: hidden; }
+    .cta-glass::after { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(14,165,233,0.18), transparent 70%); pointer-events: none; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--blue-deep); color: rgba(255,255,255,0.6); padding: 4rem 0 2rem; position: relative; overflow: hidden; }
+    footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-bright), transparent); }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: #fff; letter-spacing: 2px; }
+    .footer-logo span { color: var(--blue-bright); }
+    .footer-link { color: rgba(255,255,255,0.52); text-decoration: none; font-size: 0.9rem; transition: color 0.25s; }
+    .footer-link:hover { color: var(--blue-bright); }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 1rem 1.5rem; }
+      .nav-links, .nav-cta { display: none; }
+      .sourcing-image-wrap { height: 320px; }
+      .sourcing-img-accent, .sourcing-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">JNR<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#" class="active">Services</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html#contact" class="nav-cta"><i class="fas fa-handshake mr-1"></i> Partner With Us</a>
+</nav>
+
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero-services">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <div class="container" style="position:relative;z-index:2;padding-top:5rem;">
+    <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:4rem;align-items:center;">
+
+      <!-- left -->
+      <div>
+        <div class="hero-eyebrow fu-1">
+          <span class="hero-eyebrow-dot"></span>
+          End-to-End Grocery Solutions
+        </div>
+        <h1 class="hero-h1 fu-2">
+          Services<br>
+          That <span class="accent">Deliver.</span>
+        </h1>
+        <p class="hero-sub fu-3">
+          Beyond boxes — we offer wholesale supply, cold-chain logistics, global sourcing, private label, and data-driven retail support. One partner, complete solution.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:2.5rem;" class="fu-4">
+          <a href="#wholesale" class="btn-primary"><i class="fas fa-warehouse"></i> Wholesale Supply</a>
+          <a href="#logistics" class="btn-ghost-dark"><i class="fas fa-truck-fast"></i> Logistics</a>
+        </div>
+      </div>
+
+      <!-- right: service nav shortcuts -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;animation:fade-up 1s 0.3s ease both;">
+        <a href="#wholesale" class="service-nav-card">
+          <i class="fas fa-basket-shopping"></i>
+          <div><span class="label">Wholesale Supply</span><span class="sub">800+ products in stock</span></div>
+        </a>
+        <a href="#logistics" class="service-nav-card">
+          <i class="fas fa-snowflake"></i>
+          <div><span class="label">Cold Chain</span><span class="sub">0°C to -18°C fleet</span></div>
+        </a>
+        <a href="#sourcing" class="service-nav-card">
+          <i class="fas fa-globe-africa"></i>
+          <div><span class="label">Global Sourcing</span><span class="sub">12+ countries</span></div>
+        </a>
+        <a href="#private-label" class="service-nav-card">
+          <i class="fas fa-tag"></i>
+          <div><span class="label">Private Label</span><span class="sub">Your brand, our supply</span></div>
+        </a>
+        <a href="#value-added" class="service-nav-card" style="grid-column:span 2;">
+          <i class="fas fa-chart-line"></i>
+          <div><span class="label">Value-Added Services</span><span class="sub">B2B portal · inventory mgmt · category insights</span></div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+
+<!-- ══════════════════ TICKER ══════════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span><i class="fas fa-warehouse"></i> Wholesale Supply</span>
+    <span><i class="fas fa-snowflake"></i> Cold Chain Logistics</span>
+    <span><i class="fas fa-globe"></i> Global Sourcing</span>
+    <span><i class="fas fa-tag"></i> Private Label</span>
+    <span><i class="fas fa-laptop"></i> B2B Online Portal</span>
+    <span><i class="fas fa-chart-line"></i> Category Insights</span>
+    <span><i class="fas fa-clipboard-list"></i> Inventory Management</span>
+    <span><i class="fas fa-truck-fast"></i> Same-Day Delivery</span>
+    <span><i class="fas fa-certificate"></i> Quality Certified</span>
+    <span><i class="fas fa-warehouse"></i> Wholesale Supply</span>
+    <span><i class="fas fa-snowflake"></i> Cold Chain Logistics</span>
+    <span><i class="fas fa-globe"></i> Global Sourcing</span>
+    <span><i class="fas fa-tag"></i> Private Label</span>
+    <span><i class="fas fa-laptop"></i> B2B Online Portal</span>
+    <span><i class="fas fa-chart-line"></i> Category Insights</span>
+    <span><i class="fas fa-clipboard-list"></i> Inventory Management</span>
+    <span><i class="fas fa-truck-fast"></i> Same-Day Delivery</span>
+    <span><i class="fas fa-certificate"></i> Quality Certified</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════ SECTION 2 – WHOLESALE SUPPLY ══════════════════ -->
+<section class="wholesale-section" id="wholesale">
+  <div style="position:absolute;top:-200px;right:-200px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(186,230,253,0.35),transparent 70%);pointer-events:none;"></div>
+
+  <div class="container" style="position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;" class="reveal">
+
+      <!-- left: text -->
+      <div>
+        <p class="section-eyebrow" style="margin-bottom:1.2rem;">Core Service</p>
+        <h2 class="section-title" style="margin-bottom:1.8rem;">
+          Wholesale<br>
+          <span class="gradient-text">Grocery Supply.</span>
+        </h2>
+        <p style="color:#4a6080;line-height:1.8;font-size:1.05rem;margin-bottom:2rem;">
+          Our most comprehensive service — a complete range of dry goods, fresh produce, chilled and frozen items, and beverages, all available in retail or bulk formats with flexible ordering.
+        </p>
+
+        <!-- feature rows -->
+        <div style="display:flex;flex-direction:column;gap:0.9rem;margin-bottom:2.5rem;">
+          <div class="feature-row">
+            <div class="feature-row-icon"><i class="fas fa-wheat-awn"></i></div>
+            <div>
+              <div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Dry Goods</div>
+              <div style="font-size:0.82rem;color:#4a6080;">Pasta, rice, flour, sugar, canned vegetables, sauces & condiments</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row-icon"><i class="fas fa-seedling"></i></div>
+            <div>
+              <div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Fresh Produce</div>
+              <div style="font-size:0.82rem;color:#4a6080;">Seasonal fruits, potatoes, onions, herbs — delivered daily</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row-icon"><i class="fas fa-temperature-low"></i></div>
+            <div>
+              <div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Chilled & Frozen</div>
+              <div style="font-size:0.82rem;color:#4a6080;">Dairy, premium meats, frozen vegetables & ice cream ranges</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row-icon"><i class="fas fa-bottle-water"></i></div>
+            <div>
+              <div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Beverages</div>
+              <div style="font-size:0.82rem;color:#4a6080;">Soft drinks, juices, water, specialty teas & bulk packs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- tags -->
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
+          <span class="product-tag-chip"><i class="fas fa-check"></i> HORECA</span>
+          <span class="product-tag-chip"><i class="fas fa-check"></i> Retail Stores</span>
+          <span class="product-tag-chip"><i class="fas fa-check"></i> Informal Trade</span>
+          <span class="product-tag-chip"><i class="fas fa-check"></i> Volume Discounts</span>
+          <span class="product-tag-chip"><i class="fas fa-check"></i> Weekly Promotions</span>
+          <span class="product-tag-chip"><i class="fas fa-check"></i> Tailored Pallets</span>
+        </div>
+      </div>
+
+      <!-- right: stats + info -->
+      <div>
+        <!-- stats grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+          <div class="stat-box">
+            <div class="num">800<span>+</span></div>
+            <div class="lbl">Products in Stock</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">24<span>h</span></div>
+            <div class="lbl">City Lead Time</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">450<span>+</span></div>
+            <div class="lbl">Grocery SKUs</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">98<span>%</span></div>
+            <div class="lbl">Order Accuracy</div>
+          </div>
+        </div>
+
+        <!-- highlight card -->
+        <div style="background:linear-gradient(135deg,var(--blue-deep),#0b4185);border-radius:24px;padding:2.2rem;color:#fff;box-shadow:0 20px 50px rgba(1,32,78,0.25);">
+          <div style="font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue-light);margin-bottom:1rem;">Exclusive Partner Benefits</div>
+          <div style="display:flex;flex-direction:column;gap:0.7rem;">
+            <div style="display:flex;align-items:center;gap:0.8rem;font-size:0.92rem;"><i class="fas fa-circle-check" style="color:var(--blue-bright);"></i> Priority allocation on limited stock</div>
+            <div style="display:flex;align-items:center;gap:0.8rem;font-size:0.92rem;"><i class="fas fa-circle-check" style="color:var(--blue-bright);"></i> Dedicated account manager</div>
+            <div style="display:flex;align-items:center;gap:0.8rem;font-size:0.92rem;"><i class="fas fa-circle-check" style="color:var(--blue-bright);"></i> 30-day payment terms available</div>
+            <div style="display:flex;align-items:center;gap:0.8rem;font-size:0.92rem;"><i class="fas fa-circle-check" style="color:var(--blue-bright);"></i> Free delivery above minimum order</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="grad-divider"></div>
+
+
+<!-- ══════════════════ SECTION 3 – LOGISTICS ══════════════════ -->
+<section class="logistics-section" id="logistics">
+  <div class="container" style="position:relative;z-index:1;">
+
+    <div style="text-align:center;margin-bottom:5rem;" class="reveal">
+      <p class="section-eyebrow" style="justify-content:center;color:var(--blue-light);margin-bottom:1.2rem;">Cold Chain & Fleet</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:900;color:#fff;letter-spacing:-0.02em;margin-bottom:1rem;">
+        Logistics <span style="background:linear-gradient(90deg,var(--blue-bright),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Without Compromise</span>
+      </h2>
+      <p style="color:rgba(255,255,255,0.56);max-width:500px;margin:0 auto;line-height:1.7;">
+        Our modern fleet and precision routing ensures your products arrive fresh, on time, every time — from farm to your shelf.
+      </p>
+    </div>
+
+    <!-- big metric + temp badges row -->
+    <div style="display:flex;justify-content:center;align-items:center;gap:2rem;flex-wrap:wrap;margin-bottom:4rem;" class="reveal">
+      <div class="big-metric" style="flex:0 0 auto;min-width:200px;">
+        <div class="metric-num">98.7<span style="font-size:1.8rem;">%</span></div>
+        <div class="metric-lbl">On-Time Delivery Rate 2024</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+        <span class="temp-badge temp-cold"><i class="fas fa-temperature-low"></i> Refrigerated: 0–4°C</span>
+        <span class="temp-badge temp-freeze"><i class="fas fa-snowflake"></i> Freezer: −18°C</span>
+        <span class="temp-badge temp-ambient"><i class="fas fa-box"></i> Ambient: Controlled</span>
+      </div>
+      <div class="big-metric" style="flex:0 0 auto;min-width:200px;">
+        <div class="metric-num">15<span style="font-size:1.8rem;">+</span></div>
+        <div class="metric-lbl">Vehicles in Active Fleet</div>
+      </div>
+    </div>
+
+    <!-- logistics cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;" class="reveal">
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-route"></i></div>
+        <h3>Route Optimisation</h3>
+        <p>AI-assisted routing ensures deliveries happen before your doors open — minimising fuel, time, and emissions.</p>
+      </div>
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-clock"></i></div>
+        <h3>Flexible Time Slots</h3>
+        <p>Choose early morning, midday, or express same-day delivery. Emergency restocks available 24/7 on the hotline.</p>
+      </div>
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-satellite-dish"></i></div>
+        <h3>Real-Time Tracking</h3>
+        <p>Key clients receive live GPS tracking and automated ETA notifications — no more waiting or wondering.</p>
+      </div>
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-shield-halved"></i></div>
+        <h3>Fully Insured Fleet</h3>
+        <p>Every vehicle and every load is fully insured. If something goes wrong, we cover it — no exceptions.</p>
+      </div>
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-map-location-dot"></i></div>
+        <h3>Western Cape Coverage</h3>
+        <p>Full coverage across the Western Cape with expanding routes into Gauteng and KwaZulu-Natal.</p>
+      </div>
+      <div class="logistics-card">
+        <div class="l-icon"><i class="fas fa-leaf"></i></div>
+        <h3>Eco-Conscious Ops</h3>
+        <p>We're transitioning to hybrid vehicles and optimising routes to reduce our carbon footprint year on year.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════ SECTION 4 – SOURCING + PRIVATE LABEL ══════════════════ -->
+<section class="sourcing-section" id="sourcing">
+  <div style="position:absolute;bottom:-150px;left:-150px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(186,230,253,0.3),transparent 70%);pointer-events:none;"></div>
+
+  <div class="container" style="position:relative;z-index:1;">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-bottom:7rem;" class="reveal">
+
+      <!-- image stack -->
+      <div class="sourcing-image-wrap">
+        <img class="sourcing-img-main"
+          src="https://images.unsplash.com/photo-1604719313366-bf1b7b0e6c0b?q=80&w=1600&auto=format&fit=crop"
+          alt="Global grocery sourcing">
+        <img class="sourcing-img-accent"
+          src="https://images.unsplash.com/photo-1579113800032-f38bd6a32f4a?q=80&w=900&auto=format&fit=crop"
+          alt="Specialty products">
+        <div class="sourcing-badge">
+          <div class="big">12+</div>
+          <div class="lbl">Source<br>Countries</div>
+        </div>
+      </div>
+
+      <!-- text -->
+      <div>
+        <p class="section-eyebrow" style="margin-bottom:1.2rem;">Global Sourcing</p>
+        <h2 class="section-title" style="margin-bottom:1.8rem;">
+          The World's<br>
+          <span class="gradient-text">Best, Delivered.</span>
+        </h2>
+        <p style="color:#4a6080;line-height:1.8;font-size:1.05rem;margin-bottom:1.8rem;">
+          Rita Ndlovu and the sourcing team travel the world to discover exclusive products — Italian truffle oil, Spanish olives, Asian spice blends, African supergrains. If your customers crave authentic international ingredients, we make them available at wholesale prices.
+        </p>
+
+        <!-- country pills -->
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:2rem;">
+          <span class="country-pill">🇮🇹 Italy</span>
+          <span class="country-pill">🇬🇷 Greece</span>
+          <span class="country-pill">🇪🇸 Spain</span>
+          <span class="country-pill">🇹🇷 Turkey</span>
+          <span class="country-pill">🇮🇳 India</span>
+          <span class="country-pill">🇨🇳 China</span>
+          <span class="country-pill">🇿🇦 South Africa</span>
+          <span class="country-pill">🇰🇪 Kenya</span>
+          <span class="country-pill">🇧🇷 Brazil</span>
+          <span class="country-pill">🇫🇷 France</span>
+          <span class="country-pill">🇵🇹 Portugal</span>
+          <span class="country-pill">🇲🇦 Morocco</span>
+        </div>
+
+        <!-- spotlight items -->
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+          <div class="feature-row">
+            <div class="feature-row-icon" style="background:linear-gradient(135deg,#d97706,#b45309);"><i class="fas fa-mug-hot"></i></div>
+            <div><div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Fair Trade Coffee</div><div style="font-size:0.82rem;color:#4a6080;">Ethiopian single-origin & Colombian blends</div></div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row-icon" style="background:linear-gradient(135deg,#16a34a,#15803d);"><i class="fas fa-seedling"></i></div>
+            <div><div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Organic Quinoa & Supergrains</div><div style="font-size:0.82rem;color:#4a6080;">Bolivian quinoa, teff, amaranth & chia</div></div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row-icon" style="background:linear-gradient(135deg,#0369a1,#0b5fa7);"><i class="fas fa-jar"></i></div>
+            <div><div style="font-weight:600;font-size:0.95rem;color:var(--blue-deep);">Mediterranean Specialties</div><div style="font-size:0.82rem;color:#4a6080;">Greek feta PDO, Kalamata olives, truffle oils</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- private label row -->
+    <div id="private-label" class="reveal">
+      <div style="text-align:center;margin-bottom:3rem;">
+        <p class="section-eyebrow" style="justify-content:center;margin-bottom:1rem;">Own Brand</p>
+        <h2 class="section-title">Private Label & <span class="gradient-text">Co-Packing</span></h2>
+        <p style="color:#4a6080;max-width:540px;margin:1rem auto 0;line-height:1.7;">We help you create your own branded grocery range — from label design to production, compliance, and delivery.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;">
+        <div class="private-label-card">
+          <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;margin-bottom:1.2rem;box-shadow:0 4px 14px rgba(14,165,233,0.35);"><i class="fas fa-tag"></i></div>
+          <h4 style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;margin-bottom:0.4rem;">Label Design</h4>
+          <p style="font-size:0.87rem;color:#4a6080;line-height:1.6;">Our team assists with compliant, retail-ready label creation for your private range.</p>
+        </div>
+        <div class="private-label-card">
+          <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;margin-bottom:1.2rem;box-shadow:0 4px 14px rgba(14,165,233,0.35);"><i class="fas fa-industry"></i></div>
+          <h4 style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;margin-bottom:0.4rem;">Production & Packing</h4>
+          <p style="font-size:0.87rem;color:#4a6080;line-height:1.6;">Minimum runs, fast turnaround, and full co-packing for rice, spices, oils & canned goods.</p>
+        </div>
+        <div class="private-label-card">
+          <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;margin-bottom:1.2rem;box-shadow:0 4px 14px rgba(14,165,233,0.35);"><i class="fas fa-certificate"></i></div>
+          <h4 style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;margin-bottom:0.4rem;">Compliance Certified</h4>
+          <p style="font-size:0.87rem;color:#4a6080;line-height:1.6;">All products comply with SABS, FSCA, and HACCP requirements before going to market.</p>
+        </div>
+        <div class="private-label-card">
+          <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;margin-bottom:1.2rem;box-shadow:0 4px 14px rgba(14,165,233,0.35);"><i class="fas fa-truck"></i></div>
+          <h4 style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;margin-bottom:0.4rem;">Full Supply Chain</h4>
+          <p style="font-size:0.87rem;color:#4a6080;line-height:1.6;">From raw ingredient sourcing to branded delivery at your door — we manage it all.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════ SECTION 5 – VALUE-ADDED ══════════════════ -->
+<section class="value-section" id="value-added">
+  <div class="container" style="position:relative;z-index:1;">
+
+    <div style="text-align:center;margin-bottom:5rem;" class="reveal">
+      <p class="section-eyebrow" style="justify-content:center;color:var(--blue-light);margin-bottom:1.2rem;">The Extra Mile</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:900;color:#fff;letter-spacing:-0.02em;margin-bottom:1rem;">
+        More Than <span style="background:linear-gradient(90deg,var(--blue-bright),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Distribution</span>
+      </h2>
+      <p style="color:rgba(255,255,255,0.55);max-width:500px;margin:0 auto;line-height:1.7;">
+        We invest in tools and services that make your business smarter, leaner, and more profitable.
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;" class="reveal">
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3>Inventory Management</h3>
+        <p>We help retailers forecast demand and eliminate costly stockouts. Monthly reviews and automatic replenishment options available.</p>
+      </div>
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-laptop"></i></div>
+        <h3>B2B Online Portal</h3>
+        <p>Order 24/7, view live invoices, track deliveries in real time, and access exclusive promo pricing — all in one dedicated client portal.</p>
+      </div>
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-chart-line"></i></div>
+        <h3>Category Insights</h3>
+        <p>Data-driven advice on which products sell best in your specific area — backed by our network-wide sales intelligence.</p>
+      </div>
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-headset"></i></div>
+        <h3>Dedicated Account Manager</h3>
+        <p>Every partner gets a named contact reachable via call, WhatsApp, or email. No call centres, no bots — just people who care.</p>
+      </div>
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-star"></i></div>
+        <h3>New Product Introductions</h3>
+        <p>First access to new arrivals, seasonal exclusives, and trending international products before they hit the wider market.</p>
+      </div>
+
+      <div class="val-card">
+        <div class="val-icon"><i class="fas fa-handshake"></i></div>
+        <h3>Trade Marketing Support</h3>
+        <p>In-store signage, co-branded promotions, and planogram advice to help you sell more of what we supply.</p>
+      </div>
+
+    </div>
+
+    <!-- process strip -->
+    <div style="margin-top:5rem;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:28px;padding:3rem;" class="reveal">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue-bright);margin-bottom:0.8rem;">How It Works</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#fff;">Scanned, Packed, Delivered.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;">
+        <!-- connector line -->
+        <div style="position:absolute;top:24px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--blue-bright),#2563eb);z-index:0;"></div>
+        <!-- steps -->
+        <div style="text-align:center;position:relative;z-index:1;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;margin:0 auto 1rem;box-shadow:0 6px 20px rgba(14,165,233,0.4);">01</div>
+          <div style="font-weight:600;color:#fff;font-size:0.9rem;margin-bottom:0.3rem;">You Order</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Via portal, phone, or WhatsApp</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;margin:0 auto 1rem;box-shadow:0 6px 20px rgba(14,165,233,0.4);">02</div>
+          <div style="font-weight:600;color:#fff;font-size:0.9rem;margin-bottom:0.3rem;">We Pick & Check</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Quality-verified, line by line</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;margin:0 auto 1rem;box-shadow:0 6px 20px rgba(14,165,233,0.4);">03</div>
+          <div style="font-weight:600;color:#fff;font-size:0.9rem;margin-bottom:0.3rem;">We Dispatch</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Routed & tracked in real time</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-bright),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;margin:0 auto 1rem;box-shadow:0 6px 20px rgba(14,165,233,0.4);">04</div>
+          <div style="font-weight:600;color:#fff;font-size:0.9rem;margin-bottom:0.3rem;">You Receive</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Fresh, on time, every time</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════ FINAL CTA ══════════════════ -->
+<section class="cta-section">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0;"></div>
+
+  <div class="container" style="position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;" class="reveal">
+
+      <div class="cta-glass">
+        <p class="section-eyebrow" style="color:var(--blue-light);margin-bottom:1.2rem;">Ready to Upgrade?</p>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem;">
+          Let's talk about<br><span style="background:linear-gradient(90deg,var(--blue-bright),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">your supply.</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.65);line-height:1.75;margin-bottom:2rem;font-size:1rem;">
+          Whether you need a single service or the full JNR package — we'll build a plan around your business, your volumes, and your budget.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+          <a href="tel:+27215550199" class="btn-primary" style="justify-content:center;">
+            <i class="fas fa-phone-volume"></i> +27 21 555 0199
+          </a>
+          <a href="mailto:hello@jnrtrading.co.za" class="btn-ghost-dark" style="justify-content:center;">
+            <i class="fas fa-envelope"></i> hello@jnrtrading.co.za
+          </a>
+        </div>
+      </div>
+
+      <div style="color:#fff;">
+        <p class="section-eyebrow" style="color:var(--blue-light);margin-bottom:1.5rem;">What Our Partners Say</p>
+        <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+          <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:1.6rem;">
+            <div style="display:flex;gap:0.25rem;color:#f59e0b;margin-bottom:0.8rem;font-size:0.85rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <p style="color:rgba(255,255,255,0.78);font-size:0.92rem;line-height:1.65;font-style:italic;">"JNR's cold chain is unmatched. Our fresh produce arrives as if it came straight from the farm. Never a complaint."</p>
+            <div style="margin-top:1rem;font-size:0.8rem;color:rgba(255,255,255,0.45);">— Head Buyer, Cape Town Hotel Group</div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:1.6rem;">
+            <div style="display:flex;gap:0.25rem;color:#f59e0b;margin-bottom:0.8rem;font-size:0.85rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <p style="color:rgba(255,255,255,0.78);font-size:0.92rem;line-height:1.65;font-style:italic;">"The private label service transformed our store. Our own branded rice line outsells national brands every month."</p>
+            <div style="margin-top:1rem;font-size:0.8rem;color:rgba(255,255,255,0.45);">— Owner, independent supermarket chain</div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:1.5rem;padding:1.2rem 1.6rem;background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.3);border-radius:16px;font-size:0.88rem;color:rgba(255,255,255,0.72);">
+          <i class="fas fa-download" style="color:var(--blue-bright);margin-right:0.5rem;"></i>
+          <a href="#" style="color:rgba(255,255,255,0.85);text-decoration:underline;text-decoration-color:rgba(14,165,233,0.5);">Download our full service brochure (PDF)</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="container">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:4rem;">
+
+      <div>
+        <div class="footer-logo" style="margin-bottom:1.2rem;">JNR<span>.</span></div>
+        <p style="color:rgba(255,255,255,0.48);font-size:0.9rem;line-height:1.7;max-width:280px;">
+          End-to-end grocery solutions for retailers, chefs, and wholesalers across South Africa. Quality, speed, and care — always.
+        </p>
+        <div style="display:flex;gap:0.8rem;margin-top:1.5rem;">
+          <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.58);transition:all 0.25s;text-decoration:none;" onmouseover="this.style.background='rgba(14,165,233,0.2)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='rgba(255,255,255,0.58)'"><i class="fab fa-instagram fa-sm"></i></a>
+          <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.58);transition:all 0.25s;text-decoration:none;" onmouseover="this.style.background='rgba(14,165,233,0.2)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='rgba(255,255,255,0.58)'"><i class="fab fa-facebook-f fa-sm"></i></a>
+          <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.58);transition:all 0.25s;text-decoration:none;" onmouseover="this.style.background='rgba(14,165,233,0.2)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='rgba(255,255,255,0.58)'"><i class="fab fa-whatsapp fa-sm"></i></a>
+          <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.58);transition:all 0.25s;text-decoration:none;" onmouseover="this.style.background='rgba(14,165,233,0.2)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='rgba(255,255,255,0.58)'"><i class="fab fa-linkedin-in fa-sm"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-weight:600;color:#fff;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.2rem;">Services</div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+          <a class="footer-link" href="#wholesale">Wholesale Supply</a>
+          <a class="footer-link" href="#logistics">Cold Chain Logistics</a>
+          <a class="footer-link" href="#sourcing">Global Sourcing</a>
+          <a class="footer-link" href="#private-label">Private Label</a>
+          <a class="footer-link" href="#value-added">Value-Added</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-weight:600;color:#fff;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.2rem;">Company</div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+          <a class="footer-link" href="index.html">Home</a>
+          <a class="footer-link" href="about.html">About Us</a>
+          <a class="footer-link" href="#">Quality Standards</a>
+          <a class="footer-link" href="#">Careers</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-weight:600;color:#fff;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.2rem;">Contact</div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;font-size:0.9rem;color:rgba(255,255,255,0.48);">
+          <span><i class="fas fa-phone fa-xs" style="color:var(--blue-bright);margin-right:0.5rem;"></i>+27 21 555 0199</span>
+          <span><i class="fas fa-envelope fa-xs" style="color:var(--blue-bright);margin-right:0.5rem;"></i>hello@jnrtrading.co.za</span>
+          <span><i class="fas fa-map-pin fa-xs" style="color:var(--blue-bright);margin-right:0.5rem;"></i>42 JNR Ave, Cape Town</span>
+          <span><i class="fas fa-clock fa-xs" style="color:var(--blue-bright);margin-right:0.5rem;"></i>Mon–Fri 7:00–18:00</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <p style="font-size:0.82rem;color:rgba(255,255,255,0.32);">© 2025 JNR Trading — Wholesale Grocery Services. All rights reserved.</p>
+      <p style="font-family:'Space Mono',monospace;font-size:0.72rem;color:rgba(14,165,233,0.5);letter-spacing:0.15em;">SUPPLY · LOGISTICS · SOURCING</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ── JS ── -->
+<script>
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
